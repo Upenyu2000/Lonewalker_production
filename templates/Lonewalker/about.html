@@ -1,0 +1,104 @@
+{% extends "Lonewalker/base.html" %}
+{% load static %}
+{% block content %}
+    <style>
+        .company-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .company-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: darkorange;
+            margin-bottom: 0.5rem;
+        }
+        .company-details {
+            font-size: 1rem;
+            color: white;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            justify-items: center;
+        }
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 220px;
+        }
+        .team-member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        .team-member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .team-member-info {
+            width: 100%;
+        }
+        .team-member-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            margin-left: 0.5rem;
+            padding-bottom: 6px;
+        }
+        .team-member-role {
+            font-size: 1rem;
+            padding-top: 6px;
+            font-weight: bold;
+            color: darkorange;
+            display: inline;
+            margin-left: 0.5rem;
+            margin-bottom: 10px;
+        }
+        .team-member-details {
+            padding-top: 6px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            width: 100%;
+            text-align: center;
+            min-width: 240px;
+            word-wrap: break-word;
+        }
+    </style>
+
+    {% for company_profile in company_profiles %}
+        <div class="company-info">
+            {% if company_profile %}
+                <h1 class="company-title">{{ company_profile.title }}</h1>
+                <p class="company-details">{{ company_profile.company_profile }}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <div class="team-grid">
+        {% for member in about_us %}
+            <div class="team-member">
+                <div class="team-member-image">
+                    {% if member.image %}
+                        <img src="{{ member.image.url }}" alt="{{ member.full_name }}">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder Image">
+                    {% endif %}
+                </div>
+                <div class="team-member-info">
+                    <h2 class="team-member-name">{{ member.full_name }}</h2>
+                    <p class="team-member-role">{{ member.role }}</p>
+                    <p class="team-member-details">{{ member.employee_details }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

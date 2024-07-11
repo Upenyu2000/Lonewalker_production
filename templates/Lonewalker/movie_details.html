@@ -1,0 +1,181 @@
+{% extends "Lonewalker/base.html" %}
+{% load static %}
+{% load embed_video_tags %}
+{% block content %}
+<div class="movie-details-container">
+    <div id="video-container">
+        {% video movie_content.video 'medium' %}
+    </div>
+    <div id="description-container">
+        <div id="video-fallback" style="display:none;">
+            <p>Video is unavailable. Try watching on YouTube:</p>
+            <a href="{{ movie_content.video_url }}" target="_blank">Watch on YouTube</a>
+        </div>
+    
+        <div id="description-content">
+            <h3 class="description-label">Description:</h3>
+            <p>{{ movie_content.description }}</p>
+        </div>
+    </div>
+</div>
+
+<div id="cast-container">
+    <div class="cast-inner">
+        <h3 class="cast-label">Cast:</h3>
+        <ul id="cast-list">
+            {% for actor in movie_content.cast.all %}
+                <li>{{ actor.name }}</li>
+            {% empty %}
+                <li>No cast members listed</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var videoContainer = document.getElementById('video-container');
+    var videoFallback = document.getElementById('video-fallback');
+    
+    if (videoContainer && videoFallback) {
+        var iframe = videoContainer.querySelector('iframe');
+        if (iframe) {
+            iframe.addEventListener('error', function() {
+                videoContainer.style.display = 'none';
+                videoFallback.style.display = 'block';
+            });
+        }
+    }
+});
+</script>
+
+<style>
+body {
+    color: black;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.movie-details-container {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.cast-label {
+    color: darkorange;
+    font-size: clamp(20px, 4vw, 25px);
+}
+
+.description-label {
+    color: darkorange;
+    font-size: clamp(30px, 5vw, 40px);
+}
+
+#video-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    text-align: center;
+    width: 600px;
+    height: 337.5px; /* 16:9 aspect ratio */
+    flex-shrink: 0;
+}
+
+#video-container iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#video-fallback {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: none;
+}
+
+#description-container {
+    flex: 1;
+    min-width: 0; /* Allows the container to shrink below its content size */
+    padding-left: 50px;
+}
+
+#description-content {
+    margin-top: 0;
+}
+
+#description-content h3 {
+    font-size: 1.2em;
+    margin-top: 0;
+}
+
+#description-content p {
+    font-size: 0.89rem;
+    line-height: 1.6;
+}
+
+#cast-container {
+    padding: 20px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.cast-inner {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+
+#cast-list {
+    list-style-type: none;
+    padding: 20px;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#cast-list li {
+    font-weight: bold;
+    padding: 0px 20px;
+}
+
+@media (max-width: 1024px) {
+    .movie-details-container {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    #video-container {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+    }
+
+    #description-container {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .movie-details-container {
+        padding: 10px;
+    }
+
+    #cast-list {
+        gap: 5px;
+    }
+
+    #cast-list li {
+        font-size: 0.9em;
+    }
+}
+</style>
+{% endblock %}
